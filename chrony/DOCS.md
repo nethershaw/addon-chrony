@@ -20,6 +20,11 @@ comparison to installing any other Home Assistant add-on.
 
 ## Configuration
 
+NTP hosts may be may be configured as either pools, servers. or peers, per
+definitions in `man chrony.conf(5)`. Only one of these is technically required,
+and it should probably be a pool or a list of servers. Peering is supported for
+advanced network topologies but typically inadvisable.
+
 **Note**: _Remember to restart the add-on when the configuration is changed._
 
 Example add-on configuration:
@@ -59,25 +64,22 @@ The `set_system_clock` option configures chrony to set the local system clock.
 For some systems it may be preferable to use a different mechanism for
 setting the system time.
 
-### Option: `mode`
-
-The `mode` option configures chrony to use either `pool` or `server` mode.
-These options are:
-
-- `pool`: References a pool of servers such as pool.ntp.org (Recommended).
-- `server`: References a list of specific names or addresses.
-
-Based on the mode the `ntp_pool` or `ntp_server` option will be used.
-
 ### Option: `ntp_pool`
 
-Used by pool mode and configures the pool name to be used, should be a DNS
-record with multiple entries. The application will select which to reference.
+Configures an NTP pool name to be used, should be a DNS record with multiple
+entries. The application will select which to reference.
 
 ### Option: `ntp_server`
 
-Used by server mode, an array of server names or IP Addresses used as the
-time source. The application will select which to reference.
+Configures an array of server names or IP Addresses used as the time source.
+The application will select which to reference.
+
+### Option: `ntp_peer`
+
+The syntax of this directive is identical to that for the server directive,
+except that it specifies a symmetric association with an NTP peer instead of a
+client/server association with an NTP server. A single symmetric association
+allows the peers to be both servers and clients to each other.
 
 ## Changelog & Releases
 
