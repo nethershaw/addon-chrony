@@ -31,11 +31,13 @@ Example add-on configuration:
 
 ```yaml
 set_system_clock: true
-mode: pool
-ntp_pool: pool.ntp.org
+ntp_pool: time.example.com
 ntp_server:
-  - 54.39.13.155
-  - briareus.schulte.org
+  - 198.51.100.123
+  - 0.time.example.org
+ntp_peer:
+  - 192.0.2.123
+  - local.ntp-server.test
 ```
 
 **Note**: _This is just an example, don't copy and paste it! Create your own!_
