@@ -3,7 +3,8 @@ name: chrony
 version: dev
 slug: chrony
 description: A local NTP (Network Time Protocol) server for cameras etc.
-url: https://github.com/hassio-addons/addon-chrony
+url: https://github.com/nethershaw/addon-chrony
+# codenotary: codenotary@frenck.dev
 startup: system
 arch:
   - aarch64
@@ -14,8 +15,10 @@ privileged:
   - SYS_TIME
 ports:
   123/udp: 123
+  323/udp: 323
 ports_description:
   123/udp: NTP; Network Time Protocol
+  323/udp: Chrony; client/server command and monitoring
 options:
   set_system_clock: true
   ntp_pool: time.example.com
@@ -25,6 +28,13 @@ options:
   ntp_peer:
     - 192.0.2.123
     - local.ntp-server.test
+  allow:
+    - 10.0.1.1/24
+  bindcmdaddress:
+    - 127.0.0.1
+    - ::1
+  cmdallow: []
+  cmddeny: []
 schema:
   log_level: list(trace|debug|info|notice|warning|error|fatal)?
   set_system_clock: bool
@@ -32,4 +42,12 @@ schema:
   ntp_server:
     - str?
   ntp_peer:
+    - str?
+  allow:
+    - str?
+  bindcmdaddress:
+    - str?
+  cmdallow:
+    - str?
+  cmddeny:
     - str?

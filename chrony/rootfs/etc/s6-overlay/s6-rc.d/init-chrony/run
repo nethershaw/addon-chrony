@@ -7,6 +7,9 @@
 readonly CHRONY_CONF='/etc/chrony/chrony.conf'
 declare -a serverlist
 
+NTP_PORT=$(bashio::config 'ports["123/udp"]')
+CMD_PORT=$(bashio::config 'ports["323/udp"]')
+
 # Write configuration file
 # mode=$(bashio::config 'mode')
 # bashio::log.debug "Running in NTP mode: ${mode}"
@@ -21,3 +24,35 @@ for mode in "pool" "server" "peer"; do
 done
 
 echo "initstepslew 10 ${serverlist[*]}" >> ${CHRONY_CONF}
+
+echo "port ${NTP_PORT}" >> ${CHRONY_CONF}
+
+if ! bashio::config.is_empty "allow"; then
+    for address in $(bashio::config "allow"); do
+        bashio::log.debug "Allowing NTP client access from ${address}"
+        echo "allow ${address}" >> ${CHRONY_CONF}
+    done
+fi
+
+if ! bashio::config.is_empty "bindcmdaddress"; then
+    for address in $(bashio::config "bindcmdaddress"); do
+        bashio::log.debug "Binding command interface to ${address}"
+        echo "bindcmdaddress ${address}" >> ${CHRONY_CONF}
+    done
+fi
+
+if ! bashio::config.is_empty "cmdallow"; then
+    for address in $(bashio::config "cmdallow"); do
+        bashio::log.debug "Allowing command and monitoring access from ${address}"
+        echo "cmdallow ${address}" >> ${CHRONY_CONF}
+    done
+fi
+
+if ! bashio::config.is_empty "cmddeny"; then
+    for address in $(bashio::config "cmddeny"); do
+        bashio::log.debug "Denying command and monitoring access from ${address}"
+        echo "cmddeny ${address}" >> ${CHRONY_CONF}
+    done
+fi
+
+echo "cmdport ${CMD_PORT}" >> ${CHRONY_CONF}
